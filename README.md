@@ -148,7 +148,7 @@ npm run build
 npm audit
 ```
 
-仓库内的 GitHub Actions 会在推送到 `main` 或手动触发时构建 Android debug APK，并将产物保留 14 天。
+仓库提供 [Android Actions 工作流模板](docs/examples/android-workflow.yml)。将它复制到 `.github/workflows/android.yml` 后，推送到 `main` 或手动触发即可构建 debug APK，并把产物保留 14 天。向该目录推送工作流要求 GitHub Token 具有 `workflow` 权限。
 
 ## 项目结构
 
@@ -159,7 +159,7 @@ android/        Capacitor Android 工程与 Keystore/Safe Area 插件
 docs/           产品、架构、部署、安全与审查文档
 deploy/         Caddy 配置
 scripts/        Android WebView 检查脚本
-.github/        自动化 APK 构建工作流
+docs/examples/  可选的 Android APK 自动构建工作流模板
 ```
 
 ## 当前限制

@@ -2,7 +2,7 @@
 
 ## 使用方式
 
-1. 从 GitHub Actions 的 `daye-rss-debug-apk` 构建产物下载 APK，或在仓库中执行 `npm run cap:sync` 后运行 `android\\gradlew.bat assembleDebug` 自行构建。生成文件位于 `android/app/build/outputs/apk/debug/app-debug.apk`。
+1. 在仓库中执行 `npm run cap:sync` 后运行 `android\\gradlew.bat assembleDebug`。生成文件位于 `android/app/build/outputs/apk/debug/app-debug.apk`。也可以把 `docs/examples/android-workflow.yml` 复制到 `.github/workflows/android.yml`，由 GitHub Actions 生成 `daye-rss-debug-apk` 构建产物。
 2. 打开 App，无需注册或填写服务地址。
 3. 进入“我的”，粘贴 HTTPS RSS/Atom 地址，或导入 OPML。
 4. 回到“今日”手动刷新；之后每次打开 App，超过 15 分钟未刷新时会自动抓取。
