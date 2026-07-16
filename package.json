@@ -1,0 +1,57 @@
+{
+  "name": "daye-rss",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "engines": {
+    "node": ">=22.5"
+  },
+  "scripts": {
+    "dev": "concurrently -n server,web -c cyan,magenta \"npm:dev:server\" \"npm:dev:web\"",
+    "dev:server": "tsx watch apps/server/src/index.ts",
+    "dev:web": "vite --config apps/web/vite.config.ts",
+    "build": "npm run build:server && npm run build:web",
+    "build:server": "tsc -p apps/server/tsconfig.json",
+    "build:web": "vite build --config apps/web/vite.config.ts",
+    "start": "node dist/server/index.js",
+    "test": "vitest run",
+    "cap:add": "npx cap add android",
+    "cap:sync": "npm run build:web && npx cap sync android",
+    "android": "npm run cap:sync && npx cap open android"
+  },
+  "dependencies": {
+    "@capacitor/core": "^7.4.3",
+    "@capacitor/push-notifications": "^7.0.3",
+    "@fastify/cors": "^11.1.0",
+    "@fastify/rate-limit": "^10.3.0",
+    "@fastify/static": "^10.1.0",
+    "@mozilla/readability": "^0.6.0",
+    "fast-xml-parser": "^5.2.5",
+    "fastify": "^5.6.1",
+    "google-auth-library": "^10.3.0",
+    "linkedom": "^0.18.12",
+    "lucide-react": "^0.468.0",
+    "marked": "^18.0.6",
+    "nodemailer": "^9.0.3",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1",
+    "sanitize-html": "^2.17.0"
+  },
+  "devDependencies": {
+    "@capacitor/android": "^7.4.3",
+    "@capacitor/cli": "^7.4.3",
+    "@types/node": "^24.10.0",
+    "@types/nodemailer": "^7.0.4",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "@types/sanitize-html": "^2.16.0",
+    "@vitejs/plugin-react": "^5.1.1",
+    "concurrently": "^9.2.1",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3",
+    "vite": "^7.2.2",
+    "vitest": "^4.0.8"
+  }
+}

@@ -1,0 +1,60 @@
+# Dependencies and build output
+node_modules/
+dist/
+apps/web/dist/
+android/.gradle/
+android/build/
+android/app/build/
+android/capacitor-cordova-android-plugins/
+android/local.properties
+.npm-cache/
+*.log
+
+# Runtime and personal data
+data/
+.test-data/
+.smoke-data/
+.preview-data/
+.env
+*.db
+*.db-shm
+*.db-wal
+
+# Credentials and signing material
+*.jks
+*.keystore
+*.p12
+*.pfx
+*.pem
+*.key
+android/app/google-services.json
+
+# Installable binaries and local tools
+outputs/
+artifacts/
+qa/
+tools/
+*.apk
+*.aab
+
+# Local agent state and research captures
+.agents/
+.codex/
+apple-music-ui-audit-2026-07-13/
+
+# One-off internal QA notes
+design-qa.md
+fixes-1.4-qa.md
+v1.5-qa.md
+docs/EDITORIAL_UI_ADVERSARIAL_REVIEW.md
+docs/FIXES_1_4_ADVERSARIAL_REVIEW.md
+docs/KIMI_BROWSER_PROXY_ADVERSARIAL_REVIEW.md
+docs/TEST_STUDIO_ADVERSARIAL_REVIEW.md
+docs/V1_5_KIMI_XFOLD_ADVERSARIAL_REVIEW.md
+docs/XFOLD_ADVERSARIAL_REVIEW.md
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

@@ -1,0 +1,11 @@
+{
+  "name": "大爷的 RSS",
+  "short_name": "大爷 RSS",
+  "description": "安静、可靠的 AI RSS 阅读器",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f2f3f5",
+  "theme_color": "#f2f3f5",
+  "orientation": "any",
+  "icons": [{ "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}

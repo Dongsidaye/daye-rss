@@ -1,0 +1,8 @@
+export type Tab = 'today' | 'monitors' | 'library' | 'settings';
+export type Importance = 'critical' | 'high' | 'normal' | 'low';
+export interface Article { id: string; sourceId: string; sourceTitle: string; title: string; titleZh?: string; titleEn?: string; url: string; author?: string; publishedAt: string; excerpt: string; contentHtml: string; summaryZh?: string; translationZh?: string; imageUrl?: string; mediaUrl?: string; topics: string[]; importance: Importance; importanceScore: number; importanceReason: string; clusterId?: string; status: 'unread' | 'read' | 'saved' | 'later'; createdAt: string; enrichmentAttemptedAt?: string; enrichmentError?: string; fulltextAttemptedAt?: string; fulltextError?: string; fulltextRetryCount?: number; }
+export interface Source { id: string; title: string; url: string; siteUrl?: string; category: string; enabled: boolean; refreshMinutes: number; qualityScore: number; articleCount?: number; lastFetchedAt?: string; lastError?: string; createdAt: string; }
+export interface Monitor { id: string; name: string; query: string; topics: string[]; importance: Importance; notificationMode: 'instant' | 'brief' | 'silent'; enabled: boolean; createdAt: string; }
+export type AIRole = 'summary' | 'translation' | 'analysis';
+export interface Model { id: string; provider: string; label: string; model: string; baseUrl?: string; roles: AIRole[]; enabled: boolean; priority: number; primaryRoles?: AIRole[]; hasApiKey: boolean; }
+export interface Preferences { density: 'compact' | 'standard' | 'comfortable'; theme: 'system' | 'light' | 'dark'; reduceTransparency: boolean; reduceMotion: boolean; morningBriefHour: number; eveningBriefHour: number; briefsEnabled: boolean; }

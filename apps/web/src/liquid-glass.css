@@ -1,0 +1,479 @@
+:root {
+  --glass-spring:cubic-bezier(.2,.82,.2,1.06);
+  --glass-hairline:rgba(255,255,255,.28);
+  --liquid-control-fill:rgba(239,246,235,.22);
+  --liquid-control-fill-hover:rgba(244,249,241,.34);
+  --liquid-control-line:rgba(255,255,255,.5);
+  --liquid-control-shadow:rgba(20,20,40,.1) 0 1px 2px,rgba(20,20,40,.14) 0 2px 6px -1px;
+  --liquid-control-backdrop:blur(13px) saturate(132%) contrast(1.035);
+}
+
+.liquid-glass-defs { position:fixed; width:0; height:0; overflow:hidden; pointer-events:none; }
+
+/*
+ * The real material: a counter-positioned copy of the scene is displaced.
+ * There is deliberately no frosted white background and no decorative glow.
+ */
+.true-glass-lens {
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  border:0;
+  background:transparent;
+  box-shadow:rgba(20,20,40,.1) 0 1px 2px,rgba(20,20,40,.14) 0 2px 6px -1px;
+}
+
+.true-glass-refraction,
+.true-glass-contrast,
+.true-glass-lens::after { position:absolute; inset:0; border-radius:inherit; pointer-events:none; }
+
+.true-glass-refraction { z-index:0; overflow:hidden; filter:var(--liquid-glass-filter,none); }
+.true-glass-refraction>div { position:absolute; left:0; top:0; }
+.true-glass-refraction img { width:100%; height:100%; display:block; object-fit:cover; object-position:center; }
+.true-glass-contrast { z-index:1; background:#000; opacity:.3; }
+.true-glass-lens::after { content:""; z-index:3; border:1px solid var(--glass-hairline); box-shadow:inset 0 0 0 .5px rgba(255,255,255,.06); }
+.true-glass-content { position:relative; z-index:2; height:100%; }
+
+/* The editorial hero owns one glass pane, matching the reference architecture. */
+.editorial-v2 .briefing-hero {
+  min-height:460px !important;
+  border:0 !important;
+  box-shadow:0 12px 34px rgba(24,32,20,.14) !important;
+  background:#2f3a2d;
+}
+.editorial-v2 .briefing-hero:hover { box-shadow:0 15px 38px rgba(24,32,20,.17) !important; }
+.editorial-v2 .briefing-hero>img { filter:saturate(.82) contrast(1.04) brightness(.9) !important; transform:scale(1.01) !important; }
+.editorial-v2 .briefing-shade { background:rgba(0,0,0,.05) !important; }
+.editorial-v2 .briefing-content.true-glass-lens {
+  position:absolute;
+  inset:18px auto 18px 18px;
+  width:min(82%,620px);
+  min-height:0 !important;
+  padding:0 !important;
+  display:block !important;
+  border-radius:26px;
+  animation:briefingSlideIn .42s cubic-bezier(.2,.8,.25,1);
+}
+.editorial-v2 .briefing-content .true-glass-content {
+  min-height:100%;
+  padding:18px 20px 14px;
+  display:flex;
+  flex-direction:column;
+}
+.editorial-v2 .briefing-content h2 { color:#fff !important; text-shadow:0 1px 2px rgba(0,0,0,.25); }
+.editorial-v2 .briefing-title-en,
+.editorial-v2 .briefing-kicker,
+.editorial-v2 .briefing-duration { color:rgba(255,255,255,.78) !important; }
+.editorial-v2 .briefing-duration { border-color:rgba(255,255,255,.24) !important; background:rgba(0,0,0,.18) !important; }
+.editorial-v2 .briefing-content ol { max-width:none; }
+.editorial-v2 .briefing-content li,
+html.preview-light .editorial-v2 .briefing-content li,
+html.theme-light .editorial-v2 .briefing-content li,
+html.theme-dark .editorial-v2 .briefing-content li {
+  color:#fff;
+  background:rgba(0,0,0,.12);
+  border:0;
+  border-top:1px solid rgba(255,255,255,.13);
+  border-radius:0;
+  backdrop-filter:none;
+}
+.editorial-v2 .briefing-content li:first-child { border-top-color:rgba(255,255,255,.2); }
+.editorial-v2 .briefing-content li b { color:rgba(255,255,255,.9); }
+.editorial-v2 .briefing-content li.clickable:hover,
+.editorial-v2 .briefing-content li.clickable:focus-visible { background:rgba(255,255,255,.08); }
+.editorial-v2 .briefing-pages button i { background:rgba(255,255,255,.32); }
+.editorial-v2 .briefing-pages button.active i { background:#fff; }
+
+/*
+ * Interactive liquid glass.
+ * The page itself stays calm and readable; controls alone carry the optical
+ * cue.  A transparent centre, a narrow specular rim and a small physical
+ * shadow keep the result closer to a lens than an opaque white pill.
+ */
+.editorial-v2 :where(
+  .today-action,
+  .filter-bar .chips button,
+  .filter-bar .density-button,
+  .deck-card-actions button,
+  .deck-open,
+  .deck-step,
+  .source-rail>button,
+  .continue-list>button,
+  .curated-section>header>button,
+  .collection-header>button,
+  .all-sources-grid>button,
+  .library-tabs button,
+  .segmented button,
+  .synthesis-sources button,
+  .language-label button,
+  .button,
+  .toolbar-group button,
+  .toolbar-group a,
+  .mobile-close,
+  .reader-cover>button,
+  .reader-cover-actions button,
+  .reader-dock button,
+  .mobile-nav button,
+  .mobile-ai,
+  .mini-reader-play
+) {
+  border-color:var(--liquid-control-line);
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.24),rgba(255,255,255,.035) 48%,rgba(107,133,83,.07)),
+    var(--liquid-control-fill);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.42),inset 0 -1px 0 rgba(38,52,31,.07),var(--liquid-control-shadow);
+  -webkit-backdrop-filter:var(--liquid-control-backdrop);
+  backdrop-filter:var(--liquid-control-backdrop);
+}
+
+.editorial-v2 :where(
+  .today-action,
+  .filter-bar .chips button,
+  .filter-bar .density-button,
+  .deck-card-actions button,
+  .deck-open,
+  .deck-step,
+  .source-rail>button,
+  .continue-list>button,
+  .curated-section>header>button,
+  .collection-header>button,
+  .all-sources-grid>button,
+  .library-tabs button,
+  .segmented button,
+  .synthesis-sources button,
+  .language-label button,
+  .button,
+  .toolbar-group button,
+  .toolbar-group a,
+  .mobile-close,
+  .reader-cover>button,
+  .reader-cover-actions button,
+  .reader-dock button,
+  .mobile-nav button,
+  .mobile-ai
+):where(:hover,:focus-visible) {
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.34),rgba(255,255,255,.08) 48%,rgba(107,133,83,.1)),
+    var(--liquid-control-fill-hover);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.62),inset 0 -1px 0 rgba(38,52,31,.08),0 5px 13px rgba(20,28,18,.14);
+}
+
+/* Baseline for the remaining functional buttons in monitor/library/settings/AI. */
+.editorial-v2 :where(button:not(.deck-pagination button):not(.briefing-pages button)) {
+  border-style:solid;
+  border-width:1px;
+  border-color:rgba(255,255,255,.26);
+  background-color:rgba(239,246,235,.1);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.2),rgba(20,20,40,.08) 0 1px 2px;
+  -webkit-backdrop-filter:blur(10px) saturate(124%);
+  backdrop-filter:blur(10px) saturate(124%);
+}
+.editorial-v2 :where(button:not(:disabled):not(.deck-pagination button):not(.briefing-pages button):active) {
+  transform:scale(.985);
+}
+html.theme-dark .editorial-v2 :where(button:not(.deck-pagination button):not(.briefing-pages button)) {
+  border-color:rgba(255,255,255,.11);
+  background-color:rgba(255,255,255,.035);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07),rgba(0,0,0,.2) 0 1px 2px;
+}
+
+.editorial-v2 .briefing-start {
+  color:var(--dock-ink) !important;
+  border-color:rgba(255,255,255,.38) !important;
+  background:linear-gradient(145deg,rgba(226,242,164,.92),rgba(184,220,90,.76)) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.58),0 5px 14px rgba(89,114,43,.18) !important;
+}
+.editorial-v2 .curated-section>header>button {
+  min-height:34px;
+  padding:0 11px;
+  border-radius:17px;
+}
+
+.editorial-v2 :where(button,a):focus-visible {
+  outline:2px solid color-mix(in srgb,var(--accent) 65%,white);
+  outline-offset:2px;
+}
+
+/* Controls stay quiet. Glass is an enhancement, not the page background. */
+.editorial-v2 .sidebar {
+  background:rgba(238,244,235,.48) !important;
+  color:var(--text) !important;
+  border:1px solid rgba(255,255,255,.48) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.58),var(--liquid-control-shadow) !important;
+  backdrop-filter:blur(16px) saturate(125%) contrast(1.025) !important;
+  -webkit-backdrop-filter:blur(16px) saturate(125%) contrast(1.025) !important;
+}
+.editorial-v2 .sidebar .brand-mark { color:#151a13 !important; background:var(--dock-accent) !important; border-color:rgba(31,43,24,.12) !important; box-shadow:none !important; }
+.editorial-v2 .sidebar .nav-item {
+  color:var(--muted) !important;
+  border:1px solid rgba(255,255,255,.22) !important;
+  background:rgba(255,255,255,.07) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.22) !important;
+  -webkit-backdrop-filter:blur(10px) saturate(125%);
+  backdrop-filter:blur(10px) saturate(125%);
+}
+.editorial-v2 .sidebar .nav-item:hover { color:var(--text) !important; background:rgba(255,255,255,.22) !important; }
+.editorial-v2 .sidebar .nav-item.active {
+  color:var(--text) !important;
+  border-color:rgba(255,255,255,.58) !important;
+  background:linear-gradient(145deg,rgba(224,240,182,.78),rgba(190,220,111,.46)) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.62),0 4px 12px rgba(57,78,39,.12) !important;
+  transform:none !important;
+}
+.editorial-v2 .sidebar-foot .status-dot { border-color:rgba(244,247,241,.9) !important; }
+
+.editorial-v2 .filter-bar {
+  border:1px solid rgba(30,38,27,.09) !important;
+  background:rgba(244,247,241,.78) !important;
+  box-shadow:0 5px 16px rgba(24,34,20,.07) !important;
+  backdrop-filter:blur(12px) saturate(115%) !important;
+  -webkit-backdrop-filter:blur(12px) saturate(115%) !important;
+}
+.editorial-v2 .filter-bar .chips button.active { color:var(--text) !important; background:rgba(31,42,27,.09) !important; box-shadow:none !important; }
+.editorial-v2 .source-rail>button {
+  border:1px solid var(--liquid-control-line) !important;
+  background:linear-gradient(145deg,rgba(255,255,255,.28),rgba(255,255,255,.08)),rgba(238,245,234,.23) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.48),var(--liquid-control-shadow) !important;
+}
+.editorial-v2 .source-rail>button.active { background:linear-gradient(145deg,rgba(226,240,196,.64),rgba(199,222,148,.24)) !important; box-shadow:inset 0 1px 0 rgba(255,255,255,.62),0 4px 12px rgba(50,69,34,.1) !important; }
+.editorial-v2 .timeline-row.active { border:1px solid rgba(54,72,45,.1); background:rgba(230,239,218,.72) !important; box-shadow:0 5px 14px rgba(24,34,20,.05) !important; backdrop-filter:none !important; }
+.editorial-v2 .timeline-row { content-visibility:auto; contain-intrinsic-size:auto 92px; }
+
+/* Image cards get a lens rim; their action affordances remain separate glass. */
+.editorial-v2 .deck-card::after {
+  content:"";
+  position:absolute;
+  z-index:5;
+  inset:0;
+  border-radius:inherit;
+  border:1px solid rgba(255,255,255,.4);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.34),inset 0 -1px 0 rgba(10,16,8,.28);
+  pointer-events:none;
+}
+.editorial-v2 .deck-card.active { box-shadow:rgba(20,20,40,.1) 0 1px 2px,rgba(20,20,40,.14) 0 2px 6px -1px,0 24px 52px rgba(23,31,20,.22) !important; }
+.editorial-v2 .deck-card-copy {
+  padding:13px 14px;
+  border:1px solid rgba(255,255,255,.2);
+  border-radius:18px;
+  background:rgba(10,14,9,.2);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.1),var(--liquid-control-shadow);
+  -webkit-backdrop-filter:blur(13px) saturate(128%);
+  backdrop-filter:blur(13px) saturate(128%);
+}
+
+/* The toolbar shell must never become the large white rectangle seen in QA. */
+.editorial-v2 .detail-toolbar.glass {
+  background:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
+  -webkit-backdrop-filter:none !important;
+  backdrop-filter:none !important;
+}
+.editorial-v2 .toolbar-group {
+  border:1px solid rgba(255,255,255,.42) !important;
+  background:linear-gradient(145deg,rgba(248,252,245,.28),rgba(228,238,222,.12)) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.48),var(--liquid-control-shadow) !important;
+  -webkit-backdrop-filter:blur(15px) saturate(135%) contrast(1.035) !important;
+  backdrop-filter:blur(15px) saturate(135%) contrast(1.035) !important;
+}
+.editorial-v2 .toolbar-group :where(button,a),
+.editorial-v2 .detail-toolbar .mobile-close {
+  color:color-mix(in srgb,var(--text) 84%,transparent) !important;
+  border:1px solid rgba(255,255,255,.22) !important;
+  background:rgba(255,255,255,.08) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.2) !important;
+}
+
+/* The reader dock is one dark translucent lens, not a solid status bar. */
+.editorial-v2 .reader-dock {
+  border-color:rgba(255,255,255,.22) !important;
+  background:linear-gradient(145deg,rgba(17,21,15,.72),rgba(9,12,8,.54)) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.13),var(--liquid-control-shadow),0 18px 42px rgba(10,15,8,.22) !important;
+  -webkit-backdrop-filter:blur(18px) saturate(130%) contrast(1.04) !important;
+  backdrop-filter:blur(18px) saturate(130%) contrast(1.04) !important;
+}
+.editorial-v2 .reader-dock button { border-color:rgba(255,255,255,.08) !important; background:rgba(255,255,255,.035) !important; box-shadow:inset 0 1px 0 rgba(255,255,255,.05) !important; }
+.editorial-v2 .reader-dock button.active,
+.editorial-v2 .toolbar-group button.active { color:var(--dock-ink) !important; border-color:rgba(255,255,255,.42) !important; background:linear-gradient(145deg,rgba(226,242,164,.9),rgba(184,220,90,.74)) !important; box-shadow:inset 0 1px 0 rgba(255,255,255,.58),0 5px 14px rgba(89,114,43,.18) !important; }
+.editorial-v2 .reader-dock button.working { color:#fff !important; background:rgba(255,255,255,.12) !important; animation:processing-pulse 1.1s ease-in-out infinite; }
+.editorial-v2 .reader-dock button.primary { color:var(--dock-ink) !important; border-color:rgba(255,255,255,.42) !important; background:linear-gradient(145deg,rgba(226,242,164,.88),rgba(184,220,90,.72)) !important; box-shadow:inset 0 1px 0 rgba(255,255,255,.56),0 4px 12px rgba(105,132,46,.18) !important; }
+
+/* Settings actions need a stable foreground instead of white-on-glass. */
+.editorial-v2 :where(.settings-action,.source-adder,.model-form-actions,.system-actions) .button {
+  color:#f7f9f2 !important;
+  border-color:rgba(255,255,255,.16) !important;
+  background:linear-gradient(145deg,rgba(37,44,34,.96),rgba(18,23,17,.9)) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 7px 18px rgba(20,28,18,.18) !important;
+}
+.editorial-v2 .model-form-actions .button:last-child {
+  color:var(--dock-ink) !important;
+  border-color:rgba(255,255,255,.42) !important;
+  background:linear-gradient(145deg,rgba(226,242,164,.94),rgba(184,220,90,.8)) !important;
+}
+.editorial-v2 :where(.settings-action,.source-adder,.model-form-actions,.system-actions) .button:disabled { opacity:.48 !important; }
+
+.editorial-v2 .mobile-nav {
+  border:1px solid rgba(30,38,27,.12) !important;
+  background:rgba(244,247,241,.82) !important;
+  box-shadow:0 10px 28px rgba(20,28,17,.16) !important;
+  backdrop-filter:blur(16px) saturate(120%) !important;
+  -webkit-backdrop-filter:blur(16px) saturate(120%) !important;
+}
+.editorial-v2 .mobile-nav button { color:var(--muted) !important; background:transparent !important; box-shadow:none !important; }
+.editorial-v2 .mobile-nav button.active { color:var(--text) !important; background:rgba(31,42,27,.08) !important; transform:none !important; }
+
+html.theme-dark .editorial-v2 .sidebar,
+html.theme-dark .editorial-v2 .filter-bar,
+html.theme-dark .editorial-v2 .mobile-nav { background:rgba(18,23,18,.62) !important; border-color:rgba(255,255,255,.14) !important; box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 10px 30px rgba(0,0,0,.2) !important; }
+html.theme-dark .editorial-v2 .sidebar .nav-item.active,
+html.theme-dark .editorial-v2 .filter-bar .chips button.active,
+html.theme-dark .editorial-v2 .mobile-nav button.active { background:rgba(255,255,255,.08) !important; }
+html.theme-dark .editorial-v2 .source-rail>button { background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.025)),rgba(18,23,19,.5) !important; border-color:rgba(255,255,255,.12) !important; }
+html.theme-dark .editorial-v2 .source-rail>button.active { background:linear-gradient(145deg,rgba(148,176,96,.26),rgba(67,84,49,.18)) !important; }
+html.theme-dark .editorial-v2 .timeline-row.active { background:#22291f !important; border-color:rgba(255,255,255,.08); }
+html.theme-dark .editorial-v2 .toolbar-group { background:linear-gradient(145deg,rgba(25,31,24,.42),rgba(10,14,10,.2)) !important; border-color:rgba(255,255,255,.18) !important; }
+html.theme-dark .editorial-v2 .toolbar-group :where(button,a),
+html.theme-dark .editorial-v2 .detail-toolbar .mobile-close { color:rgba(255,255,255,.84) !important; background:rgba(255,255,255,.055) !important; border-color:rgba(255,255,255,.09) !important; }
+
+html.reduce-transparency .true-glass-refraction,
+html.reduce-transparency .true-glass-contrast { display:none; }
+html.reduce-transparency .true-glass-lens { background:rgba(20,24,19,.94); }
+html.reduce-transparency .editorial-v2 :where(.sidebar,.filter-bar,.mobile-nav,.toolbar-group,.reader-dock),
+html.reduce-transparency .editorial-v2 :where(button,.toolbar-group a) { -webkit-backdrop-filter:none !important; backdrop-filter:none !important; }
+
+/*
+ * Android WebView's tile compositor has a much smaller high-DPI memory budget
+ * than desktop Chromium. Keep one SVG-refraction lens for the editorial hero,
+ * but render the many small controls from their optical gradients, hairlines
+ * and specular shadows instead of asking every control to resample the page.
+ */
+html.android-webview .editorial-v2,
+html.android-webview .editorial-v2 * {
+  -webkit-backdrop-filter:none !important;
+  backdrop-filter:none !important;
+}
+
+@media (prefers-reduced-transparency:reduce) {
+  .true-glass-refraction,.true-glass-contrast { display:none; }
+  .true-glass-lens { background:rgba(20,24,19,.94); }
+}
+
+@media (prefers-reduced-motion:reduce) {
+  .editorial-v2 .briefing-content.true-glass-lens { animation:none; }
+}
+
+@media (max-width:860px) {
+  .editorial-v2 .briefing-hero { min-height:520px !important; }
+  .editorial-v2 .briefing-content.true-glass-lens { inset:14px; width:auto; border-radius:24px; }
+  .editorial-v2 .briefing-content .true-glass-content { padding:19px 18px 16px; }
+  .editorial-v2 .briefing-content h2 { font-size:clamp(27px,8vw,34px) !important; }
+  .editorial-v2 .detail-toolbar {
+    min-height:46px !important;
+    height:46px !important;
+  }
+  .editorial-v2 .reader:not(.with-cover) {
+    padding-top:calc(var(--safe-top) + 78px) !important;
+  }
+  .editorial-v2 .detail-toolbar .mobile-close {
+    color:#fff !important;
+    border-color:rgba(255,255,255,.28) !important;
+    background:linear-gradient(145deg,rgba(26,32,24,.52),rgba(10,14,10,.28)) !important;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.18),var(--liquid-control-shadow) !important;
+  }
+  .editorial-v2 .mobile-nav {
+    background:linear-gradient(145deg,rgba(240,246,236,.56),rgba(222,232,217,.34)) !important;
+  }
+}
+
+/*
+ * Fold inner displays frequently report 700-860 CSS px even when their
+ * physical panel is ~2K wide. Treat that range as a compact two-pane canvas,
+ * not as an oversized phone. This also gives Android tablets a useful split
+ * reading layout without relying on the still-rare viewport-segments API.
+ */
+@media (min-width:700px) and (max-width:860px) {
+  .native-shell .editorial-v2.app-shell,
+  .editorial-v2.app-shell {
+    display:grid !important;
+    grid-template-columns:76px minmax(0,1fr) minmax(0,1fr) !important;
+    width:100% !important;
+    height:100dvh !important;
+    min-height:100dvh !important;
+    padding:var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left) !important;
+    overflow:hidden !important;
+  }
+  .editorial-v2 .sidebar {
+    display:flex !important;
+    left:max(8px,var(--safe-left)) !important;
+    width:60px !important;
+    padding:10px 6px !important;
+  }
+  .editorial-v2 .brand-mark.small { width:44px; height:44px; }
+  .editorial-v2 .nav-item { width:46px; min-height:52px; }
+  .editorial-v2 .main-pane {
+    grid-column:2 !important;
+    height:calc(100dvh - var(--safe-top) - var(--safe-bottom)) !important;
+    min-height:0 !important;
+    padding-bottom:0 !important;
+    overflow:auto !important;
+    border-radius:0 !important;
+  }
+  .editorial-v2 .view { max-width:none !important; margin:0 !important; padding:22px 18px 112px !important; }
+  .editorial-v2 .today-header h1 { font-size:38px; }
+  .editorial-v2 .story-deck { height:286px; margin:0; }
+  .editorial-v2 .deck-card { width:76%; height:244px; }
+  .editorial-v2 .source-rail { margin-right:-18px; }
+  .editorial-v2 .detail-wrap,
+  .editorial-v2 .detail-wrap.mobile-visible {
+    display:block !important;
+    position:static !important;
+    grid-column:3 !important;
+    width:auto !important;
+    height:calc(100dvh - var(--safe-top) - var(--safe-bottom)) !important;
+    min-height:0 !important;
+    overflow:hidden !important;
+  }
+  .editorial-v2 .detail-wrap .detail-pane,
+  .editorial-v2 .detail-wrap.mobile-visible .detail-pane {
+    position:relative !important;
+    inset:auto !important;
+    width:100% !important;
+    height:100% !important;
+    min-height:0 !important;
+    overflow-y:auto !important;
+  }
+  .editorial-v2 .detail-toolbar {
+    top:10px !important;
+    left:10px !important;
+    right:10px !important;
+  }
+  .editorial-v2 .detail-toolbar .mobile-close { display:none !important; }
+  .editorial-v2 .reader-cover { height:250px !important; min-height:250px !important; }
+  .editorial-v2 .reader-cover>button,
+  .editorial-v2 .reader-cover-actions { display:none !important; }
+  .editorial-v2 .reader {
+    width:calc(100% - 34px) !important;
+    padding:38px 0 112px !important;
+  }
+  .editorial-v2 .reader:not(.with-cover) { padding-top:86px !important; }
+  .editorial-v2 .reader.with-cover {
+    width:calc(100% - 18px) !important;
+    margin:-32px auto 0 !important;
+    padding:30px 22px 118px !important;
+  }
+  .editorial-v2 .reader h1 { font-size:clamp(29px,4.2vw,40px) !important; }
+  .editorial-v2 .reader-dock {
+    left:auto !important;
+    right:max(12px,var(--safe-right)) !important;
+    bottom:calc(12px + var(--safe-bottom)) !important;
+    width:calc((100vw - 76px - var(--safe-left) - var(--safe-right))/2 - 24px) !important;
+  }
+  .editorial-v2 .reader-dock button span { display:none; }
+  .editorial-v2 .mobile-nav,
+  .editorial-v2 .mobile-ai,
+  .editorial-v2 .mini-reader { display:none !important; }
+}
+
+@media (max-width:520px) {
+  .editorial-v2 .mobile-nav { left:50% !important; right:auto !important; width:min(92vw,420px) !important; transform:translateX(-50%); }
+}
